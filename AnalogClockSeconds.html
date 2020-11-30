@@ -1,0 +1,176 @@
+<html>
+<head>
+    
+    <style>
+        .sec {
+            background-color: rgb(255, 255, 255, 0);
+            border: none;
+
+            z-index: 1;
+        }
+
+        canvas {
+            border: 3px;
+            background-color: #000000;
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+    </style>
+    
+    
+    
+</head>
+
+<body>
+    
+    <h1>The Analog Clock</h1>
+    
+    <div id='hold'style="position: relative" >    
+        <canvas id='clock' height='550px' width='550px'> 
+            Your browser isn't supporting the canvas HTML element! 
+        </canvas>
+        
+    </div>
+    
+    
+</body>
+
+<script>
+    
+    function paint() {
+        
+        let can = document.getElementById('clock');
+        let clock = can.getContext('2d');
+    
+        //The white background color of the face
+        clock.beginPath();
+        clock.arc(275, 275, 250, 0, 2*Math.PI);
+        clock.fillStyle = '#FFFFFF';
+        clock.fill();
+        clock.stroke();
+        
+        //The gray edge
+        clock.beginPath();
+        clock.lineWidth = 20;
+        clock.strokeStyle = '#999999';
+        clock.arc(275, 275, 240, 0, 2*Math.PI);
+        clock.stroke();
+        
+        //The Numbers
+        clock.font = '50px Arial bold';
+        clock.textAlign = 'center';
+        clock.fillStyle = "#000000";
+        
+        clock.fillText('12', 275, 100);
+        clock.fillText('6', 275, 475);
+        
+        clock.fillText('3', 475, 280);
+        clock.fillText('9', 75, 280);
+        
+        clock.fillText('1', 375, 123);
+        clock.fillText('2', 448, 188);
+        
+        clock.fillText('4', 448, 375);
+        clock.fillText('5', 375, 448);
+       
+        clock.fillText('7', 175, 448);
+        clock.fillText('8', 102, 375);
+        
+        clock.fillText('10', 102, 188);
+        clock.fillText('11', 175, 123);
+    }
+    
+    
+    
+    function alter() {
+
+        const cen = 275;
+        
+        let can = document.getElementById('clock');
+        let clock = can.getContext('2d');
+    
+        let t = new Date();
+        
+        let hourIn = t.getHours();
+        let minIn = t.getMinutes();
+        let secIn = t.getSeconds();
+        
+        let hx = cen + 100*Math.cos( hourIn*(Math.PI/6) + minIn*(Math.PI/360) - Math.PI/2 );
+        let hy = cen + 100*Math.sin( hourIn*(Math.PI/6) + minIn*(Math.PI/360) - Math.PI/2 );
+        
+        let mx = cen + 150*Math.cos( minIn*(Math.PI/30) - Math.PI/2 );
+        let my = cen + 150*Math.sin( minIn*(Math.PI/30) - Math.PI/2 );
+
+        let sx = cen + 200*Math.cos( secIn*(Math.PI/30) - Math.PI/2);
+        let sy = cen + 200*Math.sin( secIn*(Math.PI/30) - Math.PI/2);
+    
+        //paint();
+
+        //The Hour Hand
+        clock.beginPath();
+        clock.lineWidth = 14;
+        clock.strokeStyle = '#000000';
+        clock.lineCap = 'round';
+        clock.moveTo(cen, cen);
+        clock.lineTo(hx, hy);
+        clock.stroke();
+        
+        //The Minute Hand
+        clock.beginPath();
+        clock.lineWidth = 7;
+        clock.strokeStyle = '#000000';
+        clock.lineCap = 'round';
+        clock.moveTo(cen, cen);
+        clock.lineTo(mx, my);
+        clock.stroke();
+
+        //The Seconds Hand
+        clock.beginPath();
+        clock.lineWidth = 3;
+        clock.strokeStyle = '#FF3333';
+        clock.lineCap = 'butt';
+        clock.moveTo(cen, cen);
+        clock.lineTo(sx, sy);
+        clock.stroke();
+        
+        //The gray button in the middle
+        clock.beginPath();
+        clock.arc(cen, cen, 25, 0, 2*Math.PI);
+        clock.fillStyle = '#999999';
+        clock.strokeStyle = '#999999';
+        clock.fill();
+        clock.stroke();
+    
+    } 
+    
+    function replace() {
+        let r = document.createElement('canvas');
+        r.setAttribute('id', 'clock');
+        r.setAttribute('height', '550px');
+        r.setAttribute('width', '550px');
+        
+        document.getElementById('clock').remove();
+        document.getElementById('hold').append(r);
+        
+    }
+    
+    function clockEngine() {
+        replace();
+        paint();
+        alter();
+    }
+    
+    
+    
+    paint();
+    alter();
+    
+    setInterval(clockEngine, 1000);
+    
+</script>
+
+</html>
